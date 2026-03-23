@@ -1,0 +1,23 @@
+:root {
+  --bg: #ffffff;
+  --card-bg: #f7f7f7;
+  --text: #111111;
+  --text-muted: #666666;
+  --border: #e5e5e5;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --radius: 10px;
+  --transition: 0.2s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f0f10;
+    --card-bg: #171717;
+    --text: #f3f3f3;
+    --text-muted: #a1a1aa;
+    --border: #2a2a2a;
+    --primary: #6366f1;
+    --primary-hover: #818cf8;
+  }
+}
