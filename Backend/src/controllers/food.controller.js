@@ -25,9 +25,28 @@ async function createFood(req, res) {
 
 async function getFoodItems(req, res) {
   const foodItems = await foodModel.find({});
+
+  const likedFoods = await likeModel.find({
+    user: req.user._id,
+  });
+
+  const likedSet = new Set(likedFoods.map((l) => l.food.toString()));
+
+  const savedFoods = await saveModel.find({
+    user: req.user._id,
+  });
+
+  const savedSet = new Set(savedFoods.map((s) => s.food.toString()));
+
+  const result = foodItems.map((item) => ({
+    ...item.toObject(),
+    isLiked: likedSet.has(item._id.toString()),
+    isSaved: savedSet.has(item._id.toString()),
+  }));
+
   res.status(200).json({
     message: "Food items fetched successfully.",
-    foodItems,
+    foodItems: result,
   });
 }
 
@@ -52,6 +71,7 @@ async function likeFood(req, res) {
 
     return res.status(200).json({
       message: "Food unliked successfully.",
+      like: false,
     });
   }
 
@@ -66,7 +86,7 @@ async function likeFood(req, res) {
 
   res.status(201).json({
     message: "Food liked successfully.",
-    like,
+    like: true,
   });
 }
 
@@ -85,8 +105,13 @@ async function saveFood(req, res) {
       food: foodId,
     });
 
+    await foodModel.findByIdAndUpdate(foodId, {
+      $inc: { saveCount: -1 },
+    });
+
     return res.status(200).json({
       message: "Food unsaved successfully.",
+      save: false,
     });
   }
 
@@ -95,9 +120,29 @@ async function saveFood(req, res) {
     food: foodId,
   });
 
+  await foodModel.findByIdAndUpdate(foodId, {
+    $inc: { saveCount: 1 },
+  });
+
   res.status(201).json({
     message: "Food saved successfully.",
-    save,
+    save: true,
+  });
+}
+
+async function getSavedFood(req, res) {
+  const user = req.user;
+
+  const saveFoods = await saveModel.find({ user: user._id }).populate("food");
+
+  const foods = saveFoods.map((s) => ({
+    ...s.food.toObject(),
+    isSaved: true,
+  }));
+
+  return res.status(200).json({
+    message: "Saved foods fetched successfully",
+    foods,
   });
 }
 
@@ -106,4 +151,5 @@ module.exports = {
   getFoodItems,
   likeFood,
   saveFood,
+  getSavedFood,
 };

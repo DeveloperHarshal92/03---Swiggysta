@@ -49,4 +49,15 @@ router.post(
   foodController.saveFood,
 );
 
+/*
+ * @method GET
+ * @route /api/food/save
+ * @access [protected]
+ */
+router.get(
+  "/save",
+  authMiddleware.authUserMiddleware,
+  foodController.getSavedFood,
+);
+
 module.exports = router;

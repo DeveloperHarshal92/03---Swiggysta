@@ -41,7 +41,7 @@ export default function BottomNav() {
         </svg>
       </Link>
 
-      {/* PROFILE */}
+      {/* SAVE */}
       <Link
         to="/save"
         className={location.pathname === "/save" ? "active" : ""}

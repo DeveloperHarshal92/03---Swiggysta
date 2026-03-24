@@ -2,7 +2,7 @@
 
 .feed{
   height:100vh;
-  overflow-y:scroll;
+  overflow-y:auto;
   scroll-snap-type:y mandatory;
 }
 
@@ -98,7 +98,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(3=6px);
+  backdrop-filter: blur(6px);
 }
 
 .icon-btn svg {
